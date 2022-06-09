@@ -3,18 +3,21 @@ import Component from "vue-class-component";
 import firebase from "firebase/compat";
 
 @Component({
-    name: "Signup"
+    name: "AccountManagement"
 })
-export default class Signup extends Vue {
-    email = "";
+export default class AccountManagement extends Vue {
+    email = undefined;
     password = "";
     passwordConfirm = "";
-    name = "";
-    loading = true;
-    valid =false;
+    name = undefined;
+    valid = false;
 
+    public get user(){
+        return this.$store.getters.user;
+    }
     mounted() {
-        this.loading = false;
+        this.email = this.user.email;
+        this.name = this.user.displayName;
     }
 
     emailRules = [
@@ -25,7 +28,6 @@ export default class Signup extends Vue {
         (v: string) => !!v || 'Name is required',
         (v: string) => v.length <= 50 || 'Name must be less than 50 characters'
     ]
-
     public get passwordRules() {
         return [
             (v: string) => !!v || 'Password is required',
@@ -49,13 +51,4 @@ export default class Signup extends Vue {
         ]
     }
 
-    public signup() {
-        firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(data => {
-            data.user.updateProfile({
-                displayName: this.name
-            });
-        }).catch(e => {
-            console.log(e);
-        })
-    }
 }
