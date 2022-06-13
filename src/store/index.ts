@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import router from "@/router";
 
 Vue.use(Vuex)
 
@@ -14,7 +15,8 @@ export default new Vuex.Store({
             type: "success",
             show: false
         },
-        loading: false
+        loading: false,
+        isAuthInit: false
     },
     getters: {
         user(state) {
@@ -28,6 +30,9 @@ export default new Vuex.Store({
         },
         loading(state) {
             return state.loading
+        },
+        isAuthInit(state) {
+            return state.isAuthInit
         }
     },
     mutations: {
@@ -46,6 +51,9 @@ export default new Vuex.Store({
         },
         SET_LOADING(state, loading) {
             state.loading = loading;
+        },
+        SET_IS_AUTH_INIT(state) {
+            state.isAuthInit = true;
         }
     },
     actions: {
@@ -66,7 +74,9 @@ export default new Vuex.Store({
             commit("SET_LOADING", true);
             commit("SET_USER", null);
             commit("SET_LOGGED_IN", false);
-            commit("SET_LOADING", false);
+            router.replace({name: "Home"}).then(() => {
+                commit("SET_LOADING", false);
+            });
         }
     }
 })

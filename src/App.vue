@@ -94,6 +94,7 @@ import {getAuth} from "firebase/auth";
     this.auth.signOut();
     this.$store.dispatch('signOut');
   }
+
 }
 </script>
 
