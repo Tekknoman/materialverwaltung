@@ -15,7 +15,7 @@ const routes: Array<RouteConfig> = [
   },{
   path: '/signup',
     name: 'Signup',
-    component: Signup
+    component: Signup,
   },
   {
     path: '/login',
@@ -25,7 +25,10 @@ const routes: Array<RouteConfig> = [
   {
     path: '/accountManagement',
     name: 'AccountManagement',
-    component: AccountManagement
+    component: AccountManagement,
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 

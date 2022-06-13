@@ -16,7 +16,7 @@ export default class Login extends Vue {
     public login() {
         if (!this.loading) {
             this.$store.commit("SET_LOADING", true);
-            firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(r => {
+            firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(() => {
                 this.$store.commit("SET_ALERT", {
                     type: "success",
                     message: "You have been logged in",

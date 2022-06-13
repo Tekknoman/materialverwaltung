@@ -2,6 +2,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import firebase from "firebase/compat";
 import store from "@/store";
+import {getAuth} from "firebase/auth";
 
 @Component({
     name: "AccountManagement"
@@ -12,6 +13,30 @@ export default class AccountManagement extends Vue {
     password = "";
     passwordConfirm = "";
     valid = false;
+    deleteConfirmFloat = false;
+    deleteConfirmReference = Math.floor(Math.random() * 100);
+    deleteConfirmInput = Math.floor(this.deleteConfirmReference / (Math.random() * 100));
+    auth = getAuth();
+
+    public resetDeleteConfirm() {
+        this.deleteConfirmReference = Math.floor(Math.random() * 100);
+        this.deleteConfirmInput = Math.floor(this.deleteConfirmReference / (Math.random() * 100));
+    }
+
+    public openDeleteConfirmFloat() {
+        this.deleteConfirmFloat = true;
+        this.resetDeleteConfirm()
+    }
+
+    public get deleteConfirmRule() {
+        return [
+            (v: number) => v === this.deleteConfirmReference || "The sliders don't match"
+        ]
+    }
+
+    public get deleteConfirm() {
+        return this.deleteConfirmReference === this.deleteConfirmInput;
+    }
 
     public get user() {
         return this.$store.getters.user;
@@ -64,32 +89,84 @@ export default class AccountManagement extends Vue {
             (v: string) => v === this.password || 'Passwords must match'
         ]
     }
+
     fetchUser() {
         firebase.auth().onAuthStateChanged(user => {
-            store.dispatch("fetchUser", user).then(r => {
-                //  TODO ADD Message
-                console.log("User: ", r);
+            store.dispatch("fetchUser", user).then();
+        });
+    }
+
+    public sendPasswordResetEmail() {
+        firebase.auth().sendPasswordResetEmail(this.email).then(() => {
+            this.$store.commit("SET_ALERT", {
+                type: "success",
+                message: "Password reset email sent",
+                show: true
+            });
+        }).catch(() => {
+            this.$store.commit("SET_ALERT", {
+                type: "error",
+                message: "Something went wrong. Please try again.",
+                show: true
             });
         });
     }
 
+    public deleteAccount() {
+        if (this.deleteConfirm) {
+            firebase.auth().currentUser?.delete().then(() => {
+                this.resetDeleteConfirm();
+                this.auth.signOut().then(() => {
+                    this.$store.dispatch('signOut').then(() => {
+                        this.$store.commit("SET_ALERT", {
+                            type: "success",
+                            message: "Account deleted",
+                            show: true
+                        });
+                    });
+                })
+            }).catch(() => {
+                this.$store.commit("SET_ALERT", {
+                    type: "error",
+                    message: "Something went wrong. Please try again.",
+                    show: true
+                });
+                this.resetDeleteConfirm();
+            });
+        }
+    }
+
     public updateAccount() {
-        if (this.newName !== this.displayName) {
+        const success = {
+            type: "success",
+            message: "Account updated",
+            show: true
+        };
+        const error = {
+            type: "error",
+            message: "Something went wrong. Please try again.",
+            show: true
+        };
+        if (this.newName !== this.displayName && this.newName.length > 0) {
             firebase.auth().currentUser?.updateProfile({
                 displayName: this.newName,
             }).then(() => {
                 this.fetchUser();
-            }).catch((e) => {
-                console.log(e);
+                this.$store.commit("SET_ALERT", success);
+            }).catch(() => {
+                this.$store.commit("SET_ALERT", error);
             });
         }
-        if (this.newMail !== this.email) {
+        if (this.newMail !== this.email && this.newMail.length > 0) {
             firebase.auth().currentUser?.updateEmail(this.newMail).then(() => {
                 this.fetchUser();
-            }).catch((e) => {
-                console.log(e);
-            });
+                this.$store.commit("SET_ALERT", success);
+            }).catch(() => {
+                    this.$store.commit("SET_ALERT", error);
+                }
+            );
         }
+
         this.newName = "";
         this.newMail = "";
     }

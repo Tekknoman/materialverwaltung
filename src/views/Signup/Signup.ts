@@ -1,6 +1,9 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import firebase from "firebase/compat";
+import router from "@/router";
+import store from "@/store";
+import { getAuth } from "firebase/auth";
 
 @Component({
     name: "Signup"
@@ -10,11 +13,15 @@ export default class Signup extends Vue {
     password = "";
     passwordConfirm = "";
     name = "";
-    loading = true;
-    valid =false;
+    valid = false;
+    auth = getAuth();
 
-    mounted() {
-        this.loading = false;
+    public get loading() {
+        return this.$store.getters.loading;
+    }
+
+    public set loading(state: boolean) {
+        this.$store.commit("SET_LOADING", state);
     }
 
     emailRules = [
@@ -50,12 +57,31 @@ export default class Signup extends Vue {
     }
 
     public signup() {
+        this.loading = true;
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(data => {
-            data.user.updateProfile({
+            data.user?.updateProfile({
                 displayName: this.name
+            }).then(() => {
+                firebase.auth().onAuthStateChanged(user => {
+                    store.dispatch("fetchUser", user).then(r => {
+                        router.replace({name: "Home"}).then(() => {
+                            this.$store.commit("SET_ALERT", {
+                                type: "success",
+                                message: "Successfully signed up",
+                                show: true
+                            });
+                            this.loading = false;
+                        });
+                    });
+                });
             });
-        }).catch(e => {
-            console.log(e);
+        }).catch(() => {
+            this.$store.commit("SET_ALERT", {
+                type: "error",
+                message: "Something went wrong. Please try again.",
+                show: true
+            });
+            this.loading = false;
         })
     }
 }
