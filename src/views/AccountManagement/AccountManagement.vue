@@ -9,7 +9,7 @@
           v-model="valid"
       >
         <v-text-field
-            v-model="name"
+            v-model="displayName"
             label="Name"
             :rules="nameRules"
             counter="50"
@@ -40,7 +40,7 @@
             ref="passwordConfirm"
         ></v-text-field>
         <v-btn
-            @click="update"
+            @click="updateAccount"
             color="primary"
             large
             v-bind:disabled="!valid"

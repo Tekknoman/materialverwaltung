@@ -8,19 +8,34 @@ import firebase from "firebase/compat";
 export default class Login extends Vue {
     email = "";
     password = "";
-    loading = false;
+
+    public get loading() {
+        return this.$store.getters.loading;
+    }
 
     public login() {
-        firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(r => {
-            console.log("Result: ", r);
-            this.$router.replace({name: "Home"}).then(r => {
-                    console.log("Redirect: ", r);
-                }
-            );
-        }).catch(e => {
-            console.log(e);
-
-        })
+        if (!this.loading) {
+            this.$store.commit("SET_LOADING", true);
+            firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(r => {
+                this.$store.commit("SET_ALERT", {
+                    type: "success",
+                    message: "You have been logged in",
+                    show: true
+                });
+                this.$router.replace({name: "Home"}).then(
+                    () => {
+                        this.$store.commit("SET_LOADING", false);
+                    }
+                );
+            }).catch(() => {
+                this.$store.commit("SET_ALERT", {
+                    type: "error",
+                    message: "Something went wrong. Please try again.",
+                    show: true
+                });
+                this.$store.commit("SET_LOADING", false);
+            })
+        }
     }
 
 

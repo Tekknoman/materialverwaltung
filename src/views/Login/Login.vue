@@ -1,5 +1,5 @@
 <template>
-  <v-main class="d-flex flex-column align-center">
+  <v-main class="d-flex flex-column align-center" @keyup.enter.native="login">
     <v-card min-width="300" max-width="500">
       <v-card-title>
         <span class="headline">Login</span>
