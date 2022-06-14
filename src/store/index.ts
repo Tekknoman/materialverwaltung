@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from "@/router";
+import { vuexfireMutations, firestoreAction } from 'vuexfire'
+import {app} from "@/main";
 
 Vue.use(Vuex)
+const db = app.firestore()
 
 export default new Vuex.Store({
     state: {
@@ -54,7 +57,8 @@ export default new Vuex.Store({
         },
         SET_IS_AUTH_INIT(state) {
             state.isAuthInit = true;
-        }
+        },
+        ...vuexfireMutations
     },
     actions: {
         fetchUser({commit}, user) {

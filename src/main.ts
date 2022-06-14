@@ -5,12 +5,10 @@ import firebaseConfig from "@/auth/keys.json";
 import vuetify from './plugins/vuetify'
 import router from './router'
 import firebase from "firebase/compat";
-import {getDatabase} from "firebase/database";
-
 
 Vue.config.productionTip = false
 
-const app = firebase.initializeApp(firebaseConfig);
+export const app = firebase.initializeApp(firebaseConfig);
 
 firebase.auth().onAuthStateChanged(user => {
     store.dispatch("fetchUser", user).then();
@@ -20,10 +18,8 @@ firebase.auth().onAuthStateChanged(user => {
 router.beforeEach(async (to, from, next) => {
     function guard() {
         if (requiresAuth && !store.getters.user.loggedIn) {
-            console.log("Redirecting to login");
             next('login');
         } else {
-            console.log("Normal redirect")
             next();
         }
     }
@@ -40,10 +36,6 @@ router.beforeEach(async (to, from, next) => {
         guard();
     }
 });
-console.log("Router after onAuthChanged: ", router)
-
-const db = getDatabase(app);
-
 
 new Vue({
     store,
