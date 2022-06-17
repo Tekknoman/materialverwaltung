@@ -1,11 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from "@/router";
-import { vuexfireMutations, firestoreAction } from 'vuexfire'
-import {app} from "@/main";
+import {vuexfireMutations, firestoreAction} from 'vuexfire'
+import {db} from '@/app'
 
 Vue.use(Vuex)
-const db = app.firestore()
 
 export default new Vuex.Store({
     state: {
@@ -19,7 +18,8 @@ export default new Vuex.Store({
             show: false
         },
         loading: false,
-        isAuthInit: false
+        isAuthInit: false,
+        objects: []
     },
     getters: {
         user(state) {
@@ -36,6 +36,9 @@ export default new Vuex.Store({
         },
         isAuthInit(state) {
             return state.isAuthInit
+        },
+        objects(state) {
+            return state.objects
         }
     },
     mutations: {
@@ -81,6 +84,17 @@ export default new Vuex.Store({
             router.replace({name: "Home"}).then(() => {
                 commit("SET_LOADING", false);
             });
+        },
+        bindObjects() {
+            firestoreAction(({bindFirestoreRef}) => {
+                return bindFirestoreRef('objects', db.collection('objects'))
+            })
+        },
+        unbindObjects() {
+            firestoreAction(({unbindFirestoreRef}) => {
+                unbindFirestoreRef('objects')
+            })
         }
+
     }
 })

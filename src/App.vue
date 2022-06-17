@@ -82,10 +82,11 @@ import {getAuth} from "firebase/auth";
     return this.$store.getters.alert;
   }
 
-  public get showAlert(){
+  public get showAlert() {
     return this.$store.getters.showAlert;
   }
-  public set showAlert(value: boolean){
+
+  public set showAlert(value: boolean) {
     this.$store.commit('SET_SHOW_ALERT', value);
     console.log('showAlert', value);
   }
