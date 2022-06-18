@@ -4,7 +4,10 @@ import { NavigationGuardNext, Route } from 'vue-router';
 const guard = (to: Route, from: Route, next: NavigationGuardNext) => {
   const requiresAuth: boolean = to.matched.some((record) => record.meta.requiresAuth);
   if (requiresAuth && !store.getters.isLoggedIn) {
-    next('login');
+    next({
+      path: 'login',
+      query: { next: to.fullPath }
+    });
   } else {
     next();
   }

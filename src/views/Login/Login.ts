@@ -16,7 +16,7 @@ export default class Login extends Vue {
 
   public login(): void {
     signInWithEmailAndPassword(getAuth(), this.email, this.password).then(() => {
-      router.push('/');
+      router.push(this.$route.query.next?.toString() || '/');
     });
   }
 }

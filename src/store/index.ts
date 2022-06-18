@@ -39,11 +39,11 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_USER(state, user) {
+      const oldUser = state.user;
       state.user = user;
-
-      if (user === null) {
-        // User got logged out
-        router.push('login')
+      if (user === null && oldUser !== undefined) {
+        // User was logged and got logged out. Redirect to login
+        router.push('login');
       }
     },
     SET_ALERT(state, alert) {
