@@ -1,5 +1,6 @@
 import Account from '@/views/Account/Account.vue';
 import Home from '@/views/Home/Home.vue';
+import Login from '@/views/Login/Login.vue';
 import { getAuth, signOut } from 'firebase/auth';
 import { RouteConfig } from 'vue-router';
 
@@ -26,17 +27,21 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/logout',
-    name: 'Login',
+    name: 'Logout',
     beforeEnter(): void {
       console.debug('Logging out user...');
       const session = getAuth();
       signOut(session);
     },
-    redirect: '/login',
+    alias: 'Login',
     meta: {
       isVisibleInNav: true,
       navIcon: 'mdi-logout'
     }
+  },{
+    path: '/login',
+    name: 'Login',
+    component: Login
   }
 ];
 

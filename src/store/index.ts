@@ -43,7 +43,7 @@ export default new Vuex.Store({
 
       if (user === null) {
         // User got logged out
-        router.push({ name: 'Home' })
+        router.push('login')
       }
     },
     SET_ALERT(state, alert) {
