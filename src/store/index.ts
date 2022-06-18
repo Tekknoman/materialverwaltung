@@ -1,100 +1,62 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import router from "@/router";
-import {vuexfireMutations, firestoreAction} from 'vuexfire'
-import {db} from '@/app'
+import router from '@/router';
+import { User } from 'firebase/auth';
+import Vue from 'vue';
+import Vuex from 'vuex';
+import { vuexfireMutations } from 'vuexfire';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
-    state: {
-        user: {
-            loggedIn: false,
-            data: null
-        },
-        alert: {
-            message: "",
-            type: "success",
-            show: false
-        },
-        loading: false,
-        isAuthInit: false,
-        objects: []
+  state: {
+    user: undefined as User | null | undefined,
+    alert: {
+      message: '',
+      type: 'success',
+      show: false
     },
-    getters: {
-        user(state) {
-            return state.user
-        },
-        alert(state) {
-            return state.alert
-        },
-        showAlert(state) {
-            return state.alert.show
-        },
-        loading(state) {
-            return state.loading
-        },
-        isAuthInit(state) {
-            return state.isAuthInit
-        },
-        objects(state) {
-            return state.objects
-        }
+    loading: false,
+    objects: []
+  },
+  getters: {
+    isLoggedIn(state) {
+      return state.user !== null && state.user !== undefined;
     },
-    mutations: {
-        SET_LOGGED_IN(state, value) {
-            state.user.loggedIn = value;
-        },
-        SET_USER(state, data) {
-            state.user.data = data;
-        },
-        SET_ALERT(state, alert) {
-            state.alert = alert;
-        },
-        SET_SHOW_ALERT(state, show) {
-            console.log("SET_SHOW_ALERT", show);
-            state.alert.show = show;
-        },
-        SET_LOADING(state, loading) {
-            state.loading = loading;
-        },
-        SET_IS_AUTH_INIT(state) {
-            state.isAuthInit = true;
-        },
-        ...vuexfireMutations
+    user(state) {
+      return state.user;
     },
-    actions: {
-        fetchUser({commit}, user) {
-            commit("SET_LOADING", true);
-            commit("SET_LOGGED_IN", user !== null);
-            if (user) {
-                commit("SET_USER", {
-                    displayName: user.displayName,
-                    email: user.email
-                });
-            } else {
-                commit("SET_USER", null);
-            }
-            commit("SET_LOADING", false);
-        },
-        signOut({commit}) {
-            commit("SET_LOADING", true);
-            commit("SET_USER", null);
-            commit("SET_LOGGED_IN", false);
-            router.replace({name: "Home"}).then(() => {
-                commit("SET_LOADING", false);
-            });
-        },
-        bindObjects() {
-            firestoreAction(({bindFirestoreRef}) => {
-                return bindFirestoreRef('objects', db.collection('objects'))
-            })
-        },
-        unbindObjects() {
-            firestoreAction(({unbindFirestoreRef}) => {
-                unbindFirestoreRef('objects')
-            })
-        }
-
+    alert(state) {
+      return state.alert;
+    },
+    showAlert(state) {
+      return state.alert.show;
+    },
+    loading(state) {
+      return state.loading;
+    },
+    objects(state) {
+      return state.objects;
     }
-})
+  },
+  mutations: {
+    SET_USER(state, user) {
+      state.user = user;
+
+      if (user === null) {
+        // User got logged out
+        router.push({ name: 'Home' })
+      }
+    },
+    SET_ALERT(state, alert) {
+      state.alert = alert;
+    },
+    SET_SHOW_ALERT(state, show) {
+      console.log('SET_SHOW_ALERT', show);
+      state.alert.show = show;
+    },
+    SET_LOADING(state, loading) {
+      state.loading = loading;
+    },
+    ...vuexfireMutations
+  },
+  actions: {}
+});

@@ -1,45 +1,24 @@
-import Vue from 'vue'
-import App from '@/App.vue'
-import store from './store'
-import vuetify from './plugins/vuetify'
-import router from './router'
-import {app} from './app'
+import App from '@/views/App.vue';
+import { initializeApp } from 'firebase/app';
+import { getAuth, User } from 'firebase/auth';
+import Vue from 'vue';
+import firebaseConfig from './config.json';
+import vuetify from './plugins/vuetify';
+import router from './router';
+import store from './store';
 
-Vue.config.productionTip = false
+initializeApp(firebaseConfig);
 
-
-app.auth().onAuthStateChanged(user => {
-    store.dispatch("fetchUser", user).then();
-    store.commit("SET_IS_AUTH_INIT");
+getAuth().onAuthStateChanged((user: User | null) => {
+  console.debug('[Auth] User state change', user);
+  store.commit('SET_USER', user);
 });
 
-store.dispatch('bindObjects').then()
-
-router.beforeEach(async (to, from, next) => {
-    function guard() {
-        if (requiresAuth && !store.getters.user.loggedIn) {
-            next('login');
-        } else {
-            next();
-        }
-    }
-
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-    if (!store.getters.isAuthInit) {
-        store.watch(
-            state => state.isAuthInit,
-            () => {
-                guard()
-            }
-        );
-    } else {
-        guard();
-    }
-});
+Vue.config.productionTip = false;
 
 new Vue({
-    store,
-    vuetify,
-    router,
-    render: h => h(App)
-}).$mount('#app')
+  store,
+  vuetify,
+  router,
+  render: (h) => h(App)
+}).$mount('#app');
