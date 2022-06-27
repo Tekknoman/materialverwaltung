@@ -6,7 +6,7 @@
         <router-view></router-view>
       </v-container>
     </v-main>
-    <v-snackbar :timeout="3000" :color="alert.type" v-model="showAlert" elevation="4" transition="slide-y-transition" min-width="200" absolute right top>
+    <v-snackbar :timeout="3000" :color="alert.type" v-model="showAlert" elevation="4" transition="slide-y-transition" min-width="200" right top>
       {{ alert.message }}
     </v-snackbar>
   </v-app>

@@ -48,9 +48,12 @@ export default new Vuex.Store({
     },
     SET_ALERT(state, alert) {
       state.alert = alert;
+      state.alert.show = true;
     },
     SET_SHOW_ALERT(state, show) {
-      console.log('SET_SHOW_ALERT', show);
+      if (!show) {
+        state.alert = {message: '', type: 'success', show: false};
+      }
       state.alert.show = show;
     },
     SET_LOADING(state, loading) {

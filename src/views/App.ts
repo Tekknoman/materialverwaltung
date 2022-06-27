@@ -28,7 +28,6 @@ export default class App extends Vue {
 
   public set showAlert(value: boolean) {
     this.$store.commit('SET_SHOW_ALERT', value);
-    console.debug('showAlert', value);
   }
 
   public logout(): void {

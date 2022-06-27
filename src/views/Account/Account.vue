@@ -28,17 +28,17 @@
               <template v-slot:badge>
                 <v-icon @click="accountEditing.displayName = user.displayName">mdi-close</v-icon>
               </template>
-              <v-text-field label="Name" counter="50" required v-model="accountEditing.displayName"></v-text-field>
+              <v-text-field :rules="nameRules" label="Name" counter="50" required v-model="accountEditing.displayName"></v-text-field>
             </v-badge>
 
             <v-badge class="d-flex" color="primary" offset-y="20" :value="emailEdited" overlap>
               <template v-slot:badge>
                 <v-icon @click="accountEditing.email = user.email">mdi-close</v-icon>
               </template>
-              <v-text-field label="E-mail" required v-model="accountEditing.email"></v-text-field>
+              <v-text-field :rules="emailRules" label="E-mail" required v-model="accountEditing.email"></v-text-field>
             </v-badge>
 
-            <v-btn color="primary" medium class="mr-2" @click="updateAccountDetails">Update</v-btn>
+            <v-btn color="primary" :disabled="updateBtnDisabled" medium class="mr-2" @click="updateAccountDetails">Update</v-btn>
             <!--<v-btn color="danger" @click="setAvatar" medium class="mr-2">Reset avatar</v-btn>-->
           </v-form>
         </div>
@@ -49,10 +49,10 @@
 
     <div>
       <h4>Password</h4>
-      <v-form lazy-validation ref="form">
-        <v-text-field label="Password" counter="128" type="password" required></v-text-field>
-        <v-text-field label="Repeat password" counter="128" type="password" required></v-text-field>
-        <v-btn color="primary" medium class="mr-2">Change Password</v-btn>
+      <v-form lazy-validation ref="password">
+        <v-text-field label="Password" :rules="passwordRules" v-model="passwordChange.new" counter="128" type="password" required></v-text-field>
+        <v-text-field label="Repeat password" :rules="confirmPasswordRules" v-model="passwordChange.confirm" counter="128" type="password" required></v-text-field>
+        <v-btn color="primary" :disabled="changePasswordBtnDisabled" @click="openPasswordPromt" medium class="mr-2">Change Password</v-btn>
       </v-form>
     </div>
 
@@ -82,6 +82,7 @@
         </v-card-text>
       </v-card>
     </v-dialog> -->
+    <PasswordDialog :callback="changePassword" :loading="loadingPassConfirm" :dialog="dialog"></PasswordDialog>
   </div>
 </template>
 
