@@ -12,6 +12,7 @@ export default class Navigation extends Vue {
     { title: 'Home', icon: 'mdi-home-city', path: '/' },
     { title: 'My Account', icon: 'mdi-account', path: '/account' },
     { title: 'Users', icon: 'mdi-account-group-outline', path: '/users' },
+    { title: 'Material', icon: 'mdi-bookshelf', path: '/material' },
     { title: 'Logout', icon: 'mdi-logout', path: '/logout' }
   ];
 
