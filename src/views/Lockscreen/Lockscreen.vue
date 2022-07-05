@@ -19,3 +19,5 @@
 </template>
 
 <script lang="ts" src="./Login.ts" />
+
+<style scoped></style>
