@@ -22,4 +22,4 @@ jobs:
       - name: Apply Changes 🧼
         uses: ad-m/github-push-action@master
         with:
-          branch: ${{ github.ref }}
+          branch: 'gh-pages'
