@@ -16,6 +16,9 @@ jobs:
         with:
           ref: 'gh-pages'
 
+      - name: Generate index 🎨
+        run: sh generate-index.sh
+
       - name: Remove unused builds 🗑
         run: |
           sh remove-unused-builds.sh
