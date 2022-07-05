@@ -1,0 +1,21 @@
+name: Cleanup 🧼
+
+on:
+  delete:
+  workflow_dispatch:
+
+
+jobs:
+
+  cleanup-github-pages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+      - uses: actions/checkout@v3
+        with:
+          ref: 'gh-pages'
+
+
+      - name: Remove unused Builds 🗑
+        run: ls -la
