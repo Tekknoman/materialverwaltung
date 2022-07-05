@@ -17,7 +17,9 @@ jobs:
           ref: 'gh-pages'
 
       - name: Remove unused builds 🗑
-        run: sh remove-unused-builds.sh
+        run: |
+          sh remove-unused-builds.sh          
+          git commit -a -m "Remove unused builds 🧼"
 
       - name: Apply Changes 🧼
         uses: ad-m/github-push-action@master
