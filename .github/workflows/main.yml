@@ -17,11 +17,12 @@ jobs:
   build-and-deploy:
     concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
     runs-on: ubuntu-latest
+    environment: github-pages
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Prep Files
+      - name: Prep Files 📝
         run: |
           cat << EOF > ./src/config.json
           {
