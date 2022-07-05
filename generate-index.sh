@@ -6,7 +6,7 @@ echo "<html><body>" > /tmp/index.html
 echo "<h1>All Builds</h1>" >> /tmp/index.html
 echo "<ul>" >> /tmp/index.html
 for branch in `cat /tmp/branches.txt`; do
-  echo "<li><a href='$(echo ${{ github.repository }} | cut -d'/' -f2)/$branch'>$branch</a></li>" >> /tmp/index.html
+  echo "<li><a href='matterialverwaltung/$branch'>$branch</a></li>" >> /tmp/index.html
 done
 echo "</ul>" >> /tmp/index.html
 echo "</body></html>" >> /tmp/index.html
