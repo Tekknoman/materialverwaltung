@@ -1,10 +1,16 @@
 name: Build and Deploy
 on:
-  [workflow_dispatch]
+  workflow_dispatch:
+    branches:
+      - '*'         # matches every branch that doesn't contain a '/'
+      - '*/*'       # matches every branch containing a single '/'
+      - '**'        # matches every branch
   push:
     branches:
-      - prod
-      - dev
+      - '*'         # matches every branch that doesn't contain a '/'
+      - '*/*'       # matches every branch containing a single '/'
+      - '**'        # matches every branch
+      - '!prod'   # excludes master
 permissions:
   contents: write
 jobs:
