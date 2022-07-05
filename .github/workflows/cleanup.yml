@@ -18,4 +18,5 @@ jobs:
 
 
       - name: Remove unused Builds 🗑
-        run: ls -la
+        #remove every folder that has no branch name in it
+        run: sh remove-unused-builds.sh
