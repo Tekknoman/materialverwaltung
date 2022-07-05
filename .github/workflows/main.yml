@@ -22,6 +22,11 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
+      - name: Get env
+        run: echo "repo_name=$(echo ${{ github.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
+
+
+
       - name: Prep Files 📝
         run: |
           cat << EOF > ./src/config.json
@@ -36,9 +41,8 @@ jobs:
               "measurementId": "${{secrets.MEASUREMENT_ID}}"
             }
           EOF
-          echo "repo_name=$(echo ${{ github.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
           echo "Repo name: ${{ env.repo_name }}"
-          cat src/vue.config.js | sed "s/PUBLIC_PATH/$(echo ${{ github.repository }} | cut -d'/' -f2)\/${{github.ref_name}}/g" > src/vue.config.js
+          cat src/vue.config.js | sed "s/PUBLIC_PATH/${{ env.repo_name }}\/${{github.ref_name}}/g" > src/vue.config.js
 
       - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
         run: |
