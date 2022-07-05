@@ -24,7 +24,7 @@ jobs:
 
       - name: Prep Files 📝
         env:
-          REPO_NAME: $(echo ${{ github.repository }} | cut -d'/' -f1)
+          REPO_NAME: echo ${{ github.repository }} | cut -d'/' -f1
         run: |
           cat << EOF > ./src/config.json
             {
