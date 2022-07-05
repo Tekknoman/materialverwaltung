@@ -39,6 +39,9 @@ jobs:
             }
           EOF
           cat ./src/vue.config.js | sed "s/PUBLIC_PATH/${{REPO_NAME}}\/${{github.ref_name}}/g" > ./src/vue.config.js
+          echo "Test"
+          cat ./src/vue.config.js
+          cat ./src/vue.config.js | echo
 
       - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
         run: |
