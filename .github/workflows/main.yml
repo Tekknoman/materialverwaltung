@@ -38,6 +38,8 @@ jobs:
               "measurementId": "${{secrets.MEASUREMENT_ID}}"
             }
           EOF
+          echo "Test"
+          echo $REPO_NAME
           cat ./src/vue.config.js | sed "s/PUBLIC_PATH/$REPO_NAME\/${{github.ref_name}}/g" > ./src/vue.config.js
           echo "Test"
           cat ./src/vue.config.js
