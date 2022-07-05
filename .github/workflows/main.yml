@@ -26,14 +26,14 @@ jobs:
           npm ci
           ./src/config.json << EOF
           {
-            "apiKey": "${{secret.API_KEY}}",
-            "authDomain": "${{secret.AUTH_DOMAIN}}",
-            "databaseURL": "${{secret.DATABASE_URL}}",
-            "projectId": "${{secret.PROJECT_ID}}",
-            "storageBucket": "${{secret.STORAGE_BUCKET}}",
-            "messagingSenderId": "${{secret.MESSAGING_SENDER_ID}}",
-            "appId": "${{secret.APP_ID}}",
-            "measurementId": "${{secret.MEASUREMENT_ID}}"        
+            "apiKey": "${{secrets.API_KEY}}",
+            "authDomain": "${{secrets.AUTH_DOMAIN}}",
+            "databaseURL": "${{secrets.DATABASE_URL}}",
+            "projectId": "${{secrets.PROJECT_ID}}",
+            "storageBucket": "${{secrets.STORAGE_BUCKET}}",
+            "messagingSenderId": "${{secrets.MESSAGING_SENDER_ID}}",
+            "appId": "${{secrets.APP_ID}}",
+            "measurementId": "${{secrets.MEASUREMENT_ID}}"        
           }
           EOF
           npm run build
