@@ -24,7 +24,7 @@ jobs:
 
       - name: Prep Files 📝
         env:
-          REPO_NAME: echo ${{ github.repository }} | cut -d'/' -f1
+          REPO_NAME: $(echo ${{ github.repository }} | cut -d'/' -f1)
         run: |
           cat << EOF > ./src/config.json
             {
@@ -40,7 +40,7 @@ jobs:
           EOF
           echo "Test"
           echo $REPO_NAME
-          cat ./src/vue.config.js | sed "s/PUBLIC_PATH/$REPO_NAME\/${{github.ref_name}}/g" > ./src/vue.config.js
+          cat ./src/vue.config.js | sed -e "s/PUBLIC_PATH/$REPO_NAME\/${{github.ref_name}}/g" > ./src/vue.config.js
           echo "Test"
           cat ./src/vue.config.js
           cat ./src/vue.config.js | echo
