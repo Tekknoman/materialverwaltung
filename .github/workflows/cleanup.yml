@@ -16,7 +16,10 @@ jobs:
         with:
           ref: 'gh-pages'
 
-
-      - name: Remove unused Builds 🗑
-        #remove every folder that has no branch name in it
+      - name: Remove unused builds 🗑
         run: sh remove-unused-builds.sh
+
+      - name: Apply Changes cleanup 🚀
+        run: |
+          git commit -m "Cleanup 🧼"
+          git push origin gh-pages
