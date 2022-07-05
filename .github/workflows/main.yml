@@ -37,8 +37,8 @@ jobs:
             }
           EOF
           echo "REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f1)" >> $GITHUB_ENV
-          echo "Repo name: $REPO_NAME"
-          cat ./src/vue.config.js | sed "s/PUBLIC_PATH/${{REPO_NAME}}\/${{github.ref_name}}/g" > ./src/vue.config.js
+          echo "Repo name: $env.REPO_NAME"
+          cat ./src/vue.config.js | sed "s/PUBLIC_PATH/${{env.REPO_NAME}}\/${{github.ref_name}}/g" > ./src/vue.config.js
           echo "Test"
           echo ./src/vue.config.js
 
