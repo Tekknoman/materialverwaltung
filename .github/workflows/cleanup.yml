@@ -19,7 +19,7 @@ jobs:
       - name: Remove unused builds 🗑
         run: sh remove-unused-builds.sh
 
-      - name: Apply Changes cleanup 🚀
-        run: |
-          git commit -m "Cleanup 🧼"
-          git push origin gh-pages
+      - name: Apply Changes 🧼
+        uses: ad-m/github-push-action@master
+        with:
+          branch: ${{ github.ref }}
