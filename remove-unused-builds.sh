@@ -1,3 +1,4 @@
+git fetch
 git branch -r | grep -v '\->' | sed 's|origin/||g' | sed 's| ||g' > /tmp/branches.txt
 find . -type d -print | grep -v 'node_modules' | grep -v '.git' | grep -v 'js' | grep -v 'css' | sed 's/\.\///g' > /tmp/dirs.txt
 
