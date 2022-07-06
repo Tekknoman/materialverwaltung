@@ -1,19 +1,17 @@
 import router from '@/router';
-import { User } from 'firebase/auth';
+import {User} from 'firebase/auth';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { vuexfireMutations } from 'vuexfire';
+import {vuexfireMutations} from 'vuexfire';
+import Alert, {triggerAlert} from "@/models/Alert";
+import AlertType from "@/models/AlertType";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     user: undefined as User | null | undefined,
-    alert: {
-      message: '',
-      type: 'success',
-      show: false
-    },
+    alert: new Alert('', AlertType.info, false),
     loading: false,
     objects: []
   },
@@ -42,8 +40,7 @@ export default new Vuex.Store({
       const oldUser = state.user;
       state.user = user;
       if (user === null && oldUser !== undefined) {
-        // User was logged and got logged out. Redirect to login
-        router.push('login');
+        router.push('login').then();
       }
     },
     SET_ALERT(state, alert) {
@@ -52,7 +49,7 @@ export default new Vuex.Store({
     },
     SET_SHOW_ALERT(state, show) {
       if (!show) {
-        state.alert = {message: '', type: 'success', show: false};
+        state.alert = {message: '', type: AlertType.info, show: false} as Alert;
       }
       state.alert.show = show;
     },
@@ -63,3 +60,5 @@ export default new Vuex.Store({
   },
   actions: {}
 });
+
+
