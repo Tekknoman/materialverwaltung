@@ -1,0 +1,32 @@
+name: Cleanup 🧼
+
+on:
+  delete:
+  workflow_dispatch:
+
+
+jobs:
+
+  cleanup-github-pages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+        with:
+          ref: 'gh-pages'
+
+      - name: Generate index 🎨
+        run: sh generate-index.sh
+
+      - name: Remove unused builds 🗑
+        run: |
+          sh remove-unused-builds.sh
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git commit -a -m "Remove unused builds 🧼"
+
+      - name: Apply Changes 🧼
+        uses: ad-m/github-push-action@master
+        with:
+          branch: 'gh-pages'
