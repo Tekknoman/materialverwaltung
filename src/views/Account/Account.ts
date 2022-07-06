@@ -50,6 +50,8 @@ export default class Account extends Vue {
         return false
     }
 
+
+
     public updateAccountDetails(): void {
         const session: User = getAuth().currentUser as User;
 
@@ -110,6 +112,12 @@ export default class Account extends Vue {
         } else {
             this.loadingPassConfirm = false;
             this.$store.commit('SET_ALERT', {message: 'You must have an email to change your password', type: 'error'});
+        }
+    }
+
+    resetValidation():void {
+        if (!this.passwordChange.new && !this.passwordChange.confirm) {
+            this.$refs.password?.resetValidation();
         }
     }
 

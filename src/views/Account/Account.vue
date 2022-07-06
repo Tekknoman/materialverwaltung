@@ -39,7 +39,6 @@
             </v-badge>
 
             <v-btn color="primary" :disabled="updateBtnDisabled" medium class="mr-2" @click="updateAccountDetails">Update</v-btn>
-            <!--<v-btn color="danger" @click="setAvatar" medium class="mr-2">Reset avatar</v-btn>-->
           </v-form>
         </div>
       </div>
@@ -50,8 +49,8 @@
     <div>
       <h4>Password</h4>
       <v-form lazy-validation ref="password">
-        <v-text-field label="Password" :rules="passwordRules" v-model="passwordChange.new" counter="128" type="password" required></v-text-field>
-        <v-text-field label="Repeat password" :rules="confirmPasswordRules" v-model="passwordChange.confirm" counter="128" type="password" required></v-text-field>
+        <v-text-field @blur="resetValidation" label="Password" :rules="passwordRules" v-model="passwordChange.new" counter="128" type="password" required></v-text-field>
+        <v-text-field @blur="resetValidation" label="Repeat password" :rules="confirmPasswordRules" v-model="passwordChange.confirm" counter="128" type="password" required></v-text-field>
         <v-btn color="primary" :disabled="changePasswordBtnDisabled" @click="openPasswordPromt" medium class="mr-2">Change Password</v-btn>
       </v-form>
     </div>
