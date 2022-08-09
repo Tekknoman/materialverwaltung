@@ -4,6 +4,7 @@ import Login from '@/views/Login/Login.vue';
 import {getAuth, signOut} from 'firebase/auth';
 import {RouteConfig} from 'vue-router';
 import Material from "@/views/Material/Material.vue";
+import Signup from "@/views/Signup/Signup.vue";
 
 const routes: Array<RouteConfig> = [
     {
@@ -44,6 +45,11 @@ const routes: Array<RouteConfig> = [
         name: 'Login',
         component: Login
     },
+    // {
+    //   path: '/signup',
+    //   name: 'Signup',
+    //   component: Signup
+    // },
     {
         path: '/material',
         name: 'Material',
