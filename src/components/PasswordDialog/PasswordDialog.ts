@@ -6,9 +6,9 @@ import {Prop} from "vue-property-decorator";
     name: 'PasswordDialog'
 })
 export default class PasswordDialog extends Vue {
-    @Prop() public dialog: boolean | null | undefined;
-    @Prop() public loading: boolean | null | undefined;
-    @Prop() public callback: {function(old: string): void} | null | undefined;
+    @Prop(Boolean) public dialog: boolean | null | undefined;
+    @Prop(Boolean) public loading: boolean | null | undefined;
+    @Prop(Function) public callback: ((old: string | undefined) => void) | undefined;
     private old = '';
 
 

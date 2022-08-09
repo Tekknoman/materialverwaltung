@@ -1,15 +1,18 @@
 import {
+    EmailAuthProvider,
     getAuth,
-    updateEmail,
-    updateProfile,
-    User,
     reauthenticateWithCredential,
+    updateEmail,
     updatePassword,
-    EmailAuthProvider
+    updateProfile,
+    User
 } from 'firebase/auth';
 import Vue from 'vue';
-import Component from 'vue-class-component';
 import PasswordDialog from "@/components/PasswordDialog/PasswordDialog.vue";
+import Component from "vue-class-component";
+import {triggerAlert} from "@/models/Alert";
+import AlertType from "@/models/AlertType";
+
 
 @Component({
     name: 'Account',
@@ -41,7 +44,15 @@ export default class Account extends Vue {
     }
 
     public get changePasswordBtnDisabled(): boolean {
-        return !this.passwordChange.new || this.passwordChange.new.length < 6 || this.passwordChange.new !== this.passwordChange.confirm;
+        return !this.passwordChange.new || !this.passwordChange.confirm || this.passwordChange.new.length < 6 || this.passwordChange.new !== this.passwordChange.confirm;
+    }
+
+    public get loading(): boolean {
+        return this.$store.getters.loading;
+    }
+
+    public set loading(value: boolean) {
+        this.$store.commit('SET_LOADING', value);
     }
 
     public randomAvatar(): boolean {
@@ -50,16 +61,27 @@ export default class Account extends Vue {
         return false
     }
 
+
     public updateAccountDetails(): void {
         const session: User = getAuth().currentUser as User;
-
+        this.loading = true;
         updateProfile(session, {
             photoURL: this.accountEditing.photoURL,
             displayName: this.accountEditing.displayName
+        }).then(() => {
+            this.loading = false;
+            triggerAlert('Account details updated successfully', AlertType.success);
+        }).catch(() => {
+            this.loading = false;
+            triggerAlert('Account details update failed', AlertType.error);
         });
 
-        if (this.accountEditing.email !== this.user.email) {
-            updateEmail(session, this.accountEditing.email!);
+        if (this.accountEditing.email !== this.user.email && this.accountEditing.email != null) {
+            updateEmail(session, this.accountEditing.email).then(() => {
+                triggerAlert('Email updated successfully', AlertType.success);
+            }).catch(() => {
+                triggerAlert('Email update failed', AlertType.error);
+            });
         }
     }
 
@@ -90,7 +112,23 @@ export default class Account extends Vue {
 
     }
 
-    public changePassword(old: string): void {
+    public resetPasswordForm():void {
+        if (this.$refs.pwRef) {
+            const ref = this.$refs.pwRef as HTMLFormElement;
+            ref.reset();
+        }
+        this.passwordChange = {
+            old: '',
+            new: '',
+            confirm: ''
+        }
+    }
+
+    public changePassword(old: string | undefined): void {
+        if (!old || old.length <= 0) {
+            this.dialog = false;
+            return
+        }
         this.loadingPassConfirm = true;
         if (this.user.email != null) {
             const credential = EmailAuthProvider.credential(this.user.email, old);
@@ -98,6 +136,7 @@ export default class Account extends Vue {
                 updatePassword(<User>getAuth().currentUser, <string>this.passwordChange.new).then(() => {
                     this.loadingPassConfirm = false;
                     this.dialog = false;
+                    this.resetPasswordForm();
                     this.$store.commit('SET_ALERT', {message: 'Password changed successfully', type: 'success'});
                 }).catch(() => {
                     this.loadingPassConfirm = false;
@@ -113,37 +152,47 @@ export default class Account extends Vue {
         }
     }
 
+
+    resetValidation(): void {
+        if (!this.passwordChange.new && !this.passwordChange.confirm) {
+            if (this.$refs.pwRef) {
+                const ref = this.$refs.pwRef as HTMLFormElement;
+                ref.resetValidation();
+            }
+        }
+    }
+
     mounted(): void {
         this.resetAccountEditing();
     }
 
     emailRules = [
-        (v: string) => !!v || 'E-mail is required',
-        (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid'
+        (v: string): boolean | string => !!v || 'E-mail is required',
+        (v: string): boolean | string => /.+@.+\..+/.test(v) || 'E-mail must be valid'
     ]
     nameRules = [
-        (v: string) => !!v || 'Name is required',
-        (v: string) => v.length <= 50 || 'Name must be less than 50 characters'
+        (v: string): boolean | string => !!v || 'Name is required',
+        (v: string): boolean | string => v.length <= 50 || 'Name must be less than 50 characters'
     ]
 
     passwordRules = [
-        (v: string) => !!v || 'Password is required',
-        (v: string) => v.length >= 6 || 'Password must be at least 6 characters',
-        (v: string) => /\d/.test(v) || 'Password must contain a number',
-        (v: string) => /[a-z]/.test(v) || 'Password must contain a lowercase letter',
-        (v: string) => /[A-Z]/.test(v) || 'Password must contain an uppercase letter',
-        (v: string) => /[^a-zA-Z0-9]/.test(v) || 'Password must contain a special character'
+        (v: string): boolean | string => !!v || 'Password is required',
+        (v: string): boolean | string => v.length >= 6 || 'Password must be at least 6 characters',
+        (v: string): boolean | string => /\d/.test(v) || 'Password must contain a number',
+        (v: string): boolean | string => /[a-z]/.test(v) || 'Password must contain a lowercase letter',
+        (v: string): boolean | string => /[A-Z]/.test(v) || 'Password must contain an uppercase letter',
+        (v: string): boolean | string => /[^a-zA-Z0-9]/.test(v) || 'Password must contain a special character'
     ]
 
-    public get confirmPasswordRules() {
+    get confirmPasswordRules(): ((v: string) => (boolean | string))[] {
         return [
-            (v: string) => !!v || 'Password is required',
-            (v: string) => v.length >= 6 || 'Password must be at least 6 characters',
-            (v: string) => /\d/.test(v) || 'Password must contain a number',
-            (v: string) => /[a-z]/.test(v) || 'Password must contain a lowercase letter',
-            (v: string) => /[A-Z]/.test(v) || 'Password must contain an uppercase letter',
-            (v: string) => /[^a-zA-Z0-9]/.test(v) || 'Password must contain a special character',
-            (v: string) => v === this.passwordChange.new || 'Passwords must match'
+            (v: string): boolean | string => !!v || 'Password is required',
+            (v: string): boolean | string => v.length >= 6 || 'Password must be at least 6 characters',
+            (v: string): boolean | string => /\d/.test(v) || 'Password must contain a number',
+            (v: string): boolean | string => /[a-z]/.test(v) || 'Password must contain a lowercase letter',
+            (v: string): boolean | string => /[A-Z]/.test(v) || 'Password must contain an uppercase letter',
+            (v: string): boolean | string => /[^a-zA-Z0-9]/.test(v) || 'Password must contain a special character',
+            (v: string): boolean | string => v === this.passwordChange.new || 'Passwords must match'
         ]
     }
 }

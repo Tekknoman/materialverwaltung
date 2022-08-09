@@ -1,7 +1,8 @@
 import Navigation from '@/components/Navigation/Navigation.vue';
-import { getAuth, User } from 'firebase/auth';
+import {getAuth, User} from 'firebase/auth';
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import AlertType from "@/models/AlertType";
 
 @Component({
   name: 'App',
@@ -18,15 +19,15 @@ export default class App extends Vue {
     return this.$store.getters.user;
   }
 
-  public get alert() {
+  private get alert() {
     return this.$store.getters.alert;
   }
 
-  public get showAlert(): boolean {
+  private get showAlert(): boolean {
     return this.$store.getters.showAlert;
   }
 
-  public set showAlert(value: boolean) {
+  private set showAlert(value: boolean) {
     this.$store.commit('SET_SHOW_ALERT', value);
   }
 
