@@ -25,4 +25,10 @@ export default class Home extends Vue {
     type = 'trend'
     autoLineWidth = false
 
+    private get recapchaScore(){
+        let score = 0
+        score = 1
+        return score
+    }
+
 }
