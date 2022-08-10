@@ -4,6 +4,8 @@ import Login from '@/views/Login/Login.vue';
 import {getAuth, signOut} from 'firebase/auth';
 import {RouteConfig} from 'vue-router';
 import Material from "@/views/Material/Material.vue";
+import LocationSelection from "@/views/Material/LocationSelection/LocationSelection.vue";
+import MaterialTable from "@/views/Material/MaterialTable/MaterialTable.vue";
 
 const routes: Array<RouteConfig> = [
     {
@@ -46,13 +48,23 @@ const routes: Array<RouteConfig> = [
     },
     {
         path: '/material',
-        name: 'Material',
         component: Material,
         meta: {
             requiresAuth: true,
             isVisibleInNav: true,
             navIcon: 'mdi-bookshelf'
-        }
+        },
+        children: [
+            {
+                path: '',
+                component: LocationSelection,
+                name: 'Material'
+            },
+            {
+                path: ':locationId',
+                component: MaterialTable
+            }
+        ]
     }
 ];
 
