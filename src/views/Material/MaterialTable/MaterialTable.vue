@@ -72,15 +72,17 @@
         </v-col>
       </v-row>
     </div>
-    <v-btn
-        fab
-        fixed
-        bottom
-        right
-        color="primary"
-    >
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
+    <v-slide-y-transition>
+      <v-btn
+          fab
+          fixed
+          bottom
+          right
+          color="primary"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </v-slide-y-transition>
     <div class="text-center">
       <v-pagination
           v-model="page"
@@ -89,6 +91,7 @@
           circle
       ></v-pagination>
     </div>
+    <item-form :callback="callback" :dialog="dialog"></item-form>
   </div>
 </template>
 <script lang="ts" src="./MaterialTable.ts"/>

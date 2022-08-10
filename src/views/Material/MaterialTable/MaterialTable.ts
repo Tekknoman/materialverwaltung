@@ -1,9 +1,13 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import ItemForm from "@/components/ItemForm/ItemForm.vue";
 
 
 @Component({
-    name: 'MaterialTable'
+    name: 'MaterialTable',
+    components: {
+        ItemForm
+    }
 })
 export default class MaterialTable extends Vue {
     filterState: boolean | undefined;
@@ -20,5 +24,11 @@ export default class MaterialTable extends Vue {
 
     openItem(): void{
         console.log("Open Item")
+        this.dialog = true;
     }
+    dialog = false;
+    callback(){
+        console.log("Callback")
+    }
+
 }
