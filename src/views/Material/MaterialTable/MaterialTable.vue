@@ -21,7 +21,7 @@
             md="6"
             lg="3"
             xl="2"
-            v-for="n in 50" :key="n"
+            v-for="n in 45" :key="n"
         >
           <v-hover
               v-slot="{hover}"
