@@ -1,8 +1,13 @@
 <template>
-  <v-main>
+  <div>
     <h1>Material</h1>
-    <router-view></router-view>
-  </v-main>
+    <v-slide-x-transition
+        leave-absolute
+        hide-on-leave
+    >
+      <router-view></router-view>
+    </v-slide-x-transition>
+  </div>
 </template>
 
 <script lang="ts" src="./Material.ts"/>
