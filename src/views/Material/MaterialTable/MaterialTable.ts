@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import ItemForm from "@/components/ItemForm/ItemForm.vue";
-import axios from "axios";
 
 
 @Component({
@@ -43,19 +42,11 @@ export default class MaterialTable extends Vue {
     //todo: edit/create callback
 
 
-    update(item
-               :
-               any
-    ):
-        void {
+    update(item: any): void {
         console.log(item);
     }
 
-    callback(item
-                 :
-                 any
-    ):
-        void {
+    callback(item: any): void {
         this.dialog = false;
         console.log(item);
     }
