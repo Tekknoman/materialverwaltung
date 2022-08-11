@@ -21,41 +21,37 @@
             md="6"
             lg="3"
             xl="2"
-            v-for="n in 45" :key="n"
-        >
+            v-for="(n) in 20" :key="n">
           <v-hover
               v-slot="{hover}"
-              open-delay="180"
-              close-delay="100"
+              close-delay="150"
           >
             <v-card
                 :elevation="hover ? 12 : 2"
+                class="transition-linear-out-slow-in"
                 height="auto"
-                @click="openItem()"
             >
               <v-card-subtitle>Category</v-card-subtitle>
-              <div class="justify-center d-flex">
-                <v-icon box>mdi-sitemap</v-icon>
-              </div>
-              <v-card-title>
-                <v-fab-transition
-                    leave-absolute
-                    hide-on-leave
-                >
-                  <v-btn
-                      v-if="hover"
-                      fab
-                      absolute
-                      top
-                      right
-                      small
-                      text
-                      outlined
-                      color="primary"
+              <v-img
+                  :src="`https://picsum.photos/300/300?image=${n * 6 + 10}`"
+                  :lazy-src="`https://picsum.photos/10/6?image=${n * 6 + 10}`"
+                  aspect-ratio="1"
+                  class="grey lighten-2"
+              >
+                <template v-slot:placeholder>
+                  <v-row
+                      class="fill-height ma-0"
+                      align="center"
+                      justify="center"
                   >
-                    <v-icon>mdi-dots-horizontal</v-icon>
-                  </v-btn>
-                </v-fab-transition>
+                    <v-progress-circular
+                        indeterminate
+                        color="grey lighten-5"
+                    ></v-progress-circular>
+                  </v-row>
+                </template>
+              </v-img>
+              <v-card-title>
                 Item Name
               </v-card-title>
               <v-card-text class="d-flex flex-wrap">
@@ -67,22 +63,100 @@
               <v-card-actions>
                 <v-btn block color="primary" text>Borrow</v-btn>
               </v-card-actions>
+              <v-fab-transition
+                  origin="center center"
+              >
+                <v-speed-dial
+                    transition="slide-y-transition"
+                    open-on-hover
+                    absolute
+                    top
+                    v-if="hover"
+                    right
+                    origin="center center"
+                    direction="bottom"
+                >
+                  <template v-slot:activator>
+                    <v-tooltip right>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            color="secondary"
+                            fab
+                            small
+                            @click="openItem('itemId')"
+                            v-bind="attrs"
+                            v-on="on"
+                        >
+                          <v-icon>
+                            mdi-dots-horizontal
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <span>More</span>
+                    </v-tooltip>
+                  </template>
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                          fab
+                          dark
+                          small
+                          color="primary"
+                          v-bind="attrs"
+                          v-on="on"
+                      >
+                        <v-icon>mdi-pencil</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Edit</span>
+                  </v-tooltip>
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                          fab
+                          dark
+                          small
+                          color="warning"
+                          v-bind="attrs"
+                          v-on="on"
+                      >
+                        <v-icon>mdi-comment-alert</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Report Broken Item</span>
+                  </v-tooltip>
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                          fab
+                          dark
+                          small
+                          color="error"
+                          v-bind="attrs"
+                          v-on="on"
+                      >
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Delete</span>
+                  </v-tooltip>
+                </v-speed-dial>
+              </v-fab-transition>
             </v-card>
           </v-hover>
         </v-col>
       </v-row>
     </div>
-    <v-slide-y-transition>
-      <v-btn
-          fab
-          fixed
-          bottom
-          right
-          color="primary"
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-    </v-slide-y-transition>
+    <v-btn
+        fab
+        fixed
+        bottom
+        right
+        color="primary"
+        @click="openItem('')"
+    >
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
     <div class="text-center">
       <v-pagination
           v-model="page"
@@ -91,7 +165,7 @@
           circle
       ></v-pagination>
     </div>
-    <item-form :callback="callback" :dialog="dialog"></item-form>
+    <item-form :callback="callback" :update="update" :editing="currentItem" :dialog="dialog"></item-form>
   </div>
 </template>
 <script lang="ts" src="./MaterialTable.ts"/>

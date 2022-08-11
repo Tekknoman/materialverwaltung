@@ -7,28 +7,40 @@
       overlay-opacity="0.1"
   >
     <v-card>
-      <h1>{{ item.title }}</h1>
       <v-form>
-        <v-text-field
-            v-model="item.title"
-            label="Title"
-            required
-        ></v-text-field>
-        <v-text-field
-            v-model="item.description"
-            label="Description"
-            required
-        ></v-text-field>
-        <v-text-field
-            v-model="item.location"
-            label="Location"
-            required
-        ></v-text-field>
-        <v-text-field
-            v-model="item.category"
-            label="Category"
-            required
-        ></v-text-field>
+        <v-card-title>
+          <h1 v-if="!editing || editing.length <= 0" class="headline">Add Item</h1>
+          <v-text-field
+              v-model="item.title.value"
+              label="Title"
+              required
+              v-else-if="item.title.edit"
+              append-icon="mdi-check"
+              append-outer-icon="mdi-close"
+              @click:append-outer="item.title.edit = false"
+              @click:append="() => {
+                update(item)
+                item.title.edit = false;
+              }"
+          ></v-text-field>
+          <h1 @click="item.title.edit = true" v-else>{{ item.title.value }}</h1>
+        </v-card-title>
+        <v-card-text>
+          <v-text-field
+              v-model="item.description.value"
+              label="Description"
+              required
+              v-if="item.description.edit"
+              append-icon="mdi-check"
+              append-outer-icon="mdi-close"
+              @click:append-outer="item.description.edit = false"
+              @click:append="() => {
+                update(item)
+                item.description.edit = false
+              }"
+          ></v-text-field>
+          <p @click="item.description.edit = true" v-else>{{ item.description.value }}</p>
+        </v-card-text>
       </v-form>
     </v-card>
   </v-dialog>
