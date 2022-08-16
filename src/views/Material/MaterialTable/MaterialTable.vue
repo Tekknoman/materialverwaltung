@@ -83,7 +83,6 @@
                             color="secondary"
                             fab
                             small
-                            @click="openItem('itemId')"
                             v-bind="attrs"
                             v-on="on"
                         >
@@ -104,6 +103,7 @@
                           color="primary"
                           v-bind="attrs"
                           v-on="on"
+                          @click="openItem('itemId')"
                       >
                         <v-icon>mdi-pencil</v-icon>
                       </v-btn>

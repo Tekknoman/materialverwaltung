@@ -6,6 +6,7 @@ import {RouteConfig} from 'vue-router';
 import Material from "@/views/Material/Material.vue";
 import LocationSelection from "@/views/Material/LocationSelection/LocationSelection.vue";
 import MaterialTable from "@/views/Material/MaterialTable/MaterialTable.vue";
+import Signup from "@/views/Signup/Signup.vue";
 
 const routes: Array<RouteConfig> = [
     {
@@ -46,6 +47,11 @@ const routes: Array<RouteConfig> = [
         name: 'Login',
         component: Login
     },
+    // {
+    //   path: '/signup',
+    //   name: 'Signup',
+    //   component: Signup
+    // },
     {
         path: '/material',
         component: Material,
