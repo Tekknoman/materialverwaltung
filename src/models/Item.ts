@@ -5,6 +5,7 @@ export default class Item {
     public title: Attribute;
     public description: Attribute;
     public attributes: Attribute[];
+
     constructor(id: string, title: Attribute, description: Attribute, attributes: Attribute[]) {
         this.id = id;
         this.title = title;

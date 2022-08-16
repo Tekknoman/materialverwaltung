@@ -2,8 +2,6 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import ItemForm from "@/components/ItemForm/ItemForm.vue";
 import Item from "@/models/Item";
-import {collection} from "firebase/firestore";
-import {db} from "@/main";
 
 
 @Component({
