@@ -165,7 +165,7 @@
           circle
       ></v-pagination>
     </div>
-    <item-form :callback="callback" :update="update" :editing="currentItem" :dialog="dialog"></item-form>
+    <item-form :closePrompt="()=>{ prompt = false }" :prompt="prompt" :close="cancel" :create="callback" :update="update" :dialog="dialog" :loading="loading"></item-form>
   </div>
 </template>
 <script lang="ts" src="./MaterialTable.ts"/>

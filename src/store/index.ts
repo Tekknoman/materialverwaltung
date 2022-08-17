@@ -6,6 +6,7 @@ import Alert, {triggerAlert} from "@/models/Alert";
 import AlertType from "@/models/AlertType";
 import Item from "@/models/Item";
 import DbService from "@/store/DbService";
+import ItemFilter from "@/models/ItemFilter";
 
 
 Vue.use(Vuex);
@@ -16,7 +17,8 @@ export default new Vuex.Store({
         alert: new Alert('', AlertType.info, false),
         loading: false,
         items: [] as Item[],
-        itemFilter: ''
+        itemFilter: new ItemFilter(),
+        currentItem: Item.empty() as Item | undefined,
     },
     getters: {
         isLoggedIn(state) {
@@ -36,6 +38,9 @@ export default new Vuex.Store({
         },
         objects(state) {
             return state.items;
+        },
+        currentItem(state) {
+            return state.currentItem;
         }
     },
     mutations: {
@@ -59,6 +64,9 @@ export default new Vuex.Store({
         SET_LOADING(state, loading) {
             state.loading = loading;
         },
+        SET_CURRENT_ITEM(state, item) {
+            state.currentItem = item;
+        },
         ADD_ITEM(state, item: Item) {
             state.items.push(item);
         },
@@ -79,10 +87,38 @@ export default new Vuex.Store({
     },
     actions: {
         fetchItems(context) {
+            context.commit('SET_LOADING', true);
             DbService.getItems(context.state.itemFilter).then((items: Item[]) => {
                 context.commit('ADD_ITEM', items);
+            }).catch(() => {
+                triggerAlert('Error fetching items', AlertType.error);
+            }).finally(() => {
+                context.commit('SET_LOADING', false);
+            });
+        },
+        fetchItem(context, itemId: string) {
+            context.commit('SET_LOADING', true);
+            DbService.getItem(itemId).then((item: Item) => {
+                context.commit('SET_CURRENT_ITEM', item);
+            }).catch(() => {
+                triggerAlert('Error fetching item', AlertType.error);
+            }).finally(() => {
+                context.commit('SET_LOADING', false);
+            }).then();
+        },
+        clearCurrentItem(context) {
+            context.commit('SET_CURRENT_ITEM', Item.empty());
+        },
+        createItem(context) {
+            DbService.createItem(context.state.currentItem).then((item: Item | void) => {
+                context.commit('ADD_ITEM', item);
+                triggerAlert('Item created', AlertType.success);
+            }).catch((error) => {
+                console.log(error);
+                triggerAlert('Error creating item', AlertType.error);
             });
         }
+
     }
 });
 
