@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Navigation v-if="isUserLoggedIn"/>
-    <v-main>
+    <v-main class="mt-6">
       <v-container>
         <router-view></router-view>
       </v-container>

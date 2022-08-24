@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mt-6">
+    <div>
       <h1>Manage Account</h1>
       <div class="d-flex flex-row align-end mt-6 mb-6">
         <v-badge class="col-3 pa-0" color="primary" :value="avatarEdited">
