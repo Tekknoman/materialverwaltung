@@ -2,6 +2,7 @@ import Item from "@/models/Item";
 import {collection, getDocs, getDoc, setDoc, doc, query, where,} from "firebase/firestore";
 import {db} from "@/main";
 import ItemFilter from "@/models/ItemFilter";
+import Tag from "@/models/Tag";
 
 export default class DbService {
 
@@ -26,6 +27,26 @@ export default class DbService {
         await setDoc(itemsRef, item).then(
             () => {
                 return item;
+            }
+        ).catch(error => {
+            throw error;
+        });
+    }
+
+    static async getTags(): Promise<Tag[]> {
+        const tagsRef = collection(db, 'tags');
+        const querySnapshot = await getDocs(tagsRef);
+        return querySnapshot.docs.map(doc => {
+            return doc.data() as Tag;
+        });
+    }
+
+    static async createTag(tag?: Tag): Promise<Tag | void> {
+        if (!tag) return Promise.reject('No tag');
+        const tagsRef = doc(collection(db, 'tags'));
+        await setDoc(tagsRef, tag as Tag).then(
+            () => {
+                return tag;
             }
         ).catch(error => {
             throw error;

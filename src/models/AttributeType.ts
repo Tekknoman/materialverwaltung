@@ -29,7 +29,8 @@ enum AttributeType {
     checkbox,
     date,
     time,
-    datetime
+    datetime,
+    tag
 }
 
 
