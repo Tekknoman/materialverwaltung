@@ -7,6 +7,7 @@ import AlertType from "@/models/AlertType";
 import Item from "@/models/Item";
 import DbService from "@/store/DbService";
 import ItemFilter from "@/models/ItemFilter";
+import Tag from "@/models/Tag";
 
 
 Vue.use(Vuex);
@@ -19,6 +20,7 @@ export default new Vuex.Store({
         items: [] as Item[],
         itemFilter: new ItemFilter(),
         currentItem: Item.empty() as Item | undefined,
+        tags: [] as Tag[],
     },
     getters: {
         isLoggedIn(state) {
@@ -41,6 +43,9 @@ export default new Vuex.Store({
         },
         currentItem(state) {
             return state.currentItem;
+        },
+        tags(state) {
+            return state.tags;
         }
     },
     mutations: {
@@ -83,6 +88,12 @@ export default new Vuex.Store({
         },
         SET_ITEM_FILTER(state, filter) {
             state.itemFilter = filter;
+        },
+        SET_TAGS(state, tags: Tag[]) {
+            state.tags = tags;
+        },
+        ADD_TAG(state, tag: Tag) {
+            state.tags.push(tag);
         }
     },
     actions: {
@@ -116,6 +127,22 @@ export default new Vuex.Store({
             }).catch((error) => {
                 console.log(error);
                 triggerAlert('Error creating item', AlertType.error);
+            });
+        },
+        fetchTags(context) {
+            DbService.getTags().then((tags: Tag[]) => {
+                context.commit('SET_TAGS', tags);
+            }).catch(() => {
+                triggerAlert('Error fetching tags', AlertType.error);
+            }).then();
+        },
+        createTag(context, tag: Tag) {
+            DbService.createTag(tag as Tag).then(() => {
+                context.dispatch('fetchTags');
+                triggerAlert('Tag created', AlertType.success);
+            }).catch((error) => {
+                console.log(error);
+                triggerAlert('Error creating tag', AlertType.error);
             });
         }
 

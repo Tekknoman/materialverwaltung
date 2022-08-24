@@ -45,6 +45,24 @@
               counter="400"
           ></v-textarea>
           <p @click="item.description.edit = true" v-else>{{ item.description.value }}</p>
+          <v-autocomplete
+              v-model="item.tags.value"
+              :items="tags"
+              auto-select-first
+              :append-icon="'mdi-plus'"
+              :return-object="true"
+              :search-input.sync="searchInput"
+              @click:append="addTag(searchInput)"
+              @keydown.enter="addTag(searchInput)"
+              hide-no-data
+              hide-selected
+              chips
+              deletable-chips
+              multiple
+              label="Tags"
+          >
+
+          </v-autocomplete>
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
           <v-btn @click="close()">Cancel</v-btn>
@@ -54,6 +72,7 @@
     </v-card>
     <v-dialog
         v-model="prompt"
+        persistent
     >
       <v-card>
         <v-card-title class="d-flex">
@@ -64,7 +83,7 @@
         </v-card-text>
         <v-card-actions class="d-flex justify-end">
           <v-btn @click="closePrompt">Cancel</v-btn>
-          <v-btn color="danger" @click="close()">Discard</v-btn>
+          <v-btn color="danger" @click="close(true)">Discard</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
