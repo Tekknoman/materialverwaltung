@@ -1,15 +1,18 @@
-export default class StorageLoaction {
+import Item from "@/models/Item";
+
+export default class StorageLocation {
     public id: string;
     public name: string;
     public description: string;
-    public itemCount: number;
+    public items: Item[];
     public x: number;
     public y: number
-    constructor(id: string, name: string, description: string, itemCount: number, y: number, x: number) {
+
+    constructor(id: string, name: string, description: string, items: Item[], y: number, x: number) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.itemCount = itemCount;
+        this.items = items;
         this.x = x;
         this.y = y;
     }

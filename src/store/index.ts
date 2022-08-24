@@ -21,6 +21,8 @@ export default new Vuex.Store({
         itemFilter: new ItemFilter(),
         currentItem: Item.empty() as Item | undefined,
         tags: [] as Tag[],
+        groups: [] as string[],
+        currentGroup: '',
     },
     getters: {
         isLoggedIn(state) {
