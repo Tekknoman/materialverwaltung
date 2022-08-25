@@ -7,6 +7,8 @@ import Material from "@/views/Material/Material.vue";
 import LocationSelection from "@/views/Material/LocationSelection/LocationSelection.vue";
 import MaterialTable from "@/views/Material/MaterialTable/MaterialTable.vue";
 import Signup from "@/views/Signup/Signup.vue";
+import Group from "@/views/Group/Group.vue";
+import GroupOverview from "@/views/Group/GroupOverview/GroupOverview.vue";
 
 const routes: Array<RouteConfig> = [
     {
@@ -26,7 +28,8 @@ const routes: Array<RouteConfig> = [
         meta: {
             requiresAuth: true,
             isVisibleInNav: true,
-            navIcon: 'mdi-account'
+            navIcon: 'mdi-account',
+            position: -10
         }
     },
     {
@@ -37,10 +40,11 @@ const routes: Array<RouteConfig> = [
             const session = getAuth();
             signOut(session);
         },
-        alias: 'Login',
+        alias: '/login',
         meta: {
             isVisibleInNav: true,
-            navIcon: 'mdi-logout'
+            navIcon: 'mdi-logout',
+            position: 10
         }
     }, {
         path: '/login',
@@ -58,7 +62,8 @@ const routes: Array<RouteConfig> = [
         meta: {
             requiresAuth: true,
             isVisibleInNav: true,
-            navIcon: 'mdi-bookshelf'
+            navIcon: 'mdi-bookshelf',
+            navTitle: 'Material'
         },
         children: [
             {
@@ -69,6 +74,23 @@ const routes: Array<RouteConfig> = [
             {
                 path: ':locationId',
                 component: MaterialTable
+            }
+        ]
+    },
+    {
+        path: '/groups',
+        component: Group,
+        meta: {
+            requiresAuth: true,
+            isVisibleInNav: true,
+            navIcon: 'mdi-account-group',
+            navTitle: 'Groups'
+        },
+        children: [
+            {
+                path: '',
+                component: GroupOverview,
+                name: 'GroupOverview'
             }
         ]
     }
