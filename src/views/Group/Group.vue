@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Group</h1>
     <v-slide-x-transition
         leave-absolute
         hide-on-leave

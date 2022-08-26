@@ -8,6 +8,7 @@ import Item from "@/models/Item";
 import DbService from "@/store/DbService";
 import ItemFilter from "@/models/ItemFilter";
 import Tag from "@/models/Tag";
+import Group from "@/models/Group";
 
 
 Vue.use(Vuex);
@@ -21,8 +22,9 @@ export default new Vuex.Store({
         itemFilter: new ItemFilter(),
         currentItem: Item.empty() as Item | undefined,
         tags: [] as Tag[],
-        groups: [] as string[],
-        currentGroup: '',
+        groups: [] as Group[],
+        currentGroup: Group.empty() as Group | undefined,
+        editGroup: Group.empty() as Group | undefined,
     },
     getters: {
         isLoggedIn(state) {
@@ -48,6 +50,15 @@ export default new Vuex.Store({
         },
         tags(state) {
             return state.tags;
+        },
+        groups(state) {
+            return state.groups;
+        },
+        currentGroup(state) {
+            return state.currentGroup;
+        },
+        editGroup(state) {
+            return state.editGroup;
         }
     },
     mutations: {
@@ -96,6 +107,21 @@ export default new Vuex.Store({
         },
         ADD_TAG(state, tag: Tag) {
             state.tags.push(tag);
+        },
+        SET_CURRENT_GROUP(state, group: Group) {
+            state.currentGroup = group;
+            localStorage.setItem('currentGroup', group.id as string);
+            triggerAlert('Group changed to: ' + group.name, AlertType.info);
+
+        },
+        SET_GROUPS(state, groups: Group[]) {
+            state.groups = groups;
+        },
+        ADD_GROUP(state, group: Group) {
+            state.groups.push(group);
+        },
+        SET_EDIT_GROUP(state, group: Group) {
+            state.editGroup = group;
         }
     },
     actions: {
@@ -146,9 +172,48 @@ export default new Vuex.Store({
                 console.log(error);
                 triggerAlert('Error creating tag', AlertType.error);
             });
+        },
+        createGroup(context, group?: Group) {
+            if (!group) group = context.getters.editGroup;
+            DbService.createGroup(group as Group).then(() => {
+                context.dispatch('fetchGroups').then(
+                    () => {
+                        router.push('.').then(() => {
+                            triggerAlert('Group created', AlertType.success);
+                            context.dispatch('clearEditGroup');
+                        })
+                    })
+            }).catch((error) => {
+                console.log(error);
+                triggerAlert('Error creating group', AlertType.error);
+                return false;
+            });
+        },
+        fetchCurrentGroup(context, groupId
+            :
+            string
+        ) {
+            DbService.getGroup(groupId).then((group: Group) => {
+                context.commit('SET_CURRENT_GROUP', group);
+            }).catch((e) => {
+                console.log(e)
+                triggerAlert('Error fetching group', AlertType.error);
+            }).then();
         }
-
+        ,
+        fetchGroups(context) {
+            DbService.getGroups().then((groups: Group[]) => {
+                context.commit('SET_GROUPS', groups);
+            }).catch(() => {
+                triggerAlert('Error fetching groups', AlertType.error);
+            }).then();
+        }
+        ,
+        clearEditGroup(context) {
+            context.commit('SET_EDIT_GROUP', Group.empty());
+        }
     }
-});
+})
+;
 
 

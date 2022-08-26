@@ -1,35 +1,56 @@
 <template>
   <div class="d-flex flex-row justify-start">
-    <v-card
-        class="ma-3"
-        v-for="group in groups"
-        :key="group"
+    <v-hover
+        v-slot="{hover}"
+        v-for="(group, i) in groups"
+        :key="i"
+        close-delay="150"
     >
-      <v-chip
-          v-if="activeGroup === group"
+      <v-badge
+          class="ma-3"
           color="success"
+          content="Active"
+          :value="group.id === currentGroup.id"
+          :dot="!hover"
+          overlap
+          :offset-x="hover ? 25 : 0"
+          transition="scale-transition"
       >
-        <i>
-          Active
-        </i>
-      </v-chip>
-      <v-card-title>
-        <span>{{ group.name }}</span>
-      </v-card-title>
-      <v-card-text>
-        {{ group.description }}
-      </v-card-text>
-      <v-card-actions>
-        <v-btn
-            color="primary"
-            rounded
-            block
-            @click="activeGroup = group"
+        <v-card
+            append
+            @click.self.stop
+            :to="group.id"
         >
-          {{ "Go to group" }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+          <v-card-title>
+            <span>{{ group.name }}</span>
+          </v-card-title>
+          <v-card-text>
+            {{ group.description }}
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+                color="primary"
+                rounded
+                block
+                @click.prevent="currentGroup = group"
+            >
+              {{ "Go to group" }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-badge>
+    </v-hover>
+    <v-btn
+        fab
+        fixed
+        bottom
+        right
+        color="primary"
+        append
+        to="new"
+    >
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
   </div>
 </template>
 

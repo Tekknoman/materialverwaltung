@@ -9,6 +9,7 @@ import MaterialTable from "@/views/Material/MaterialTable/MaterialTable.vue";
 import Signup from "@/views/Signup/Signup.vue";
 import Group from "@/views/Group/Group.vue";
 import GroupOverview from "@/views/Group/GroupOverview/GroupOverview.vue";
+import GroupDetail from "@/views/Group/GroupDetail/GroupDetail.vue";
 
 const routes: Array<RouteConfig> = [
     {
@@ -40,11 +41,11 @@ const routes: Array<RouteConfig> = [
             const session = getAuth();
             signOut(session);
         },
-        alias: '/login',
+        alias: 'Login',
         meta: {
             isVisibleInNav: true,
             navIcon: 'mdi-logout',
-            position: 10
+            position: 100
         }
     }, {
         path: '/login',
@@ -91,6 +92,10 @@ const routes: Array<RouteConfig> = [
                 path: '',
                 component: GroupOverview,
                 name: 'GroupOverview'
+            },
+            {
+                path: ':groupId',
+                component: GroupDetail,
             }
         ]
     }
