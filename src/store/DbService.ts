@@ -3,6 +3,7 @@ import {collection, getDocs, getDoc, setDoc, doc, query, where,} from "firebase/
 import {db} from "@/main";
 import ItemFilter from "@/models/ItemFilter";
 import Tag from "@/models/Tag";
+import Group from "@/models/Group";
 
 export default class DbService {
 
@@ -50,6 +51,37 @@ export default class DbService {
             }
         ).catch(error => {
             throw error;
+        });
+    }
+
+    static async getGroup(id: string): Promise<Group> {
+        const groupRef = doc(db, 'groups', id);
+        const dataDocumentSnapshot = await getDoc(groupRef);
+        const group = dataDocumentSnapshot.data() as Group;
+        group.id = dataDocumentSnapshot.id;
+        return group;
+    }
+
+    static async createGroup(group: Group): Promise<Group | void> {
+        if (!group) return Promise.reject('No group');
+        const groupsRef = doc(collection(db, 'groups'));
+        await setDoc(groupsRef, group.toFirebase()).then(
+            () => {
+                return group;
+            }
+        ).catch(error => {
+            throw error;
+        });
+    }
+
+    static async getGroups(): Promise<Group[]> {
+        const groupsRef = collection(db, 'groups');
+        const querySnapshot = await getDocs(groupsRef);
+        console.log("Groups", querySnapshot.docs)
+        return querySnapshot.docs.map(doc => {
+            const group = doc.data() as Group;
+            group.id = doc.id;
+            return group;
         });
     }
 }

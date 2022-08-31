@@ -1,4 +1,5 @@
 export default interface Tag {
-    id?: string;
-    text: string;
+    id: string;
+    text?: string;
+    toFirebase(): { id: string, text?: string };
 }

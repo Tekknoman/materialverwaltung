@@ -4,7 +4,7 @@
       <v-card :to="storageLocation.id" append max-width="300">
         <v-card-title>{{ storageLocation.name }}</v-card-title>
         <v-card-text>{{ storageLocation.description }}</v-card-text>
-        <v-card-subtitle>Total Items: {{ storageLocation.itemCount }}</v-card-subtitle>
+        <v-card-subtitle>Total Items: {{ storageLocation.items.length }}</v-card-subtitle>
       </v-card>
     </v-col>
   </v-row>
