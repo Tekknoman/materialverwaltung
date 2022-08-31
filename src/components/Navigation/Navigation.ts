@@ -12,16 +12,17 @@ import {Watch} from "vue-property-decorator";
 export default class Navigation extends Vue {
     drawer = true;
     mini = true;
+    groupSelectionFocus=false;
 
     @Watch('mini')
     miniChanged(newVal: boolean): void {
         if (newVal) return;
         setTimeout(async () => {
-            while (this.drawer) {
+            while (this.drawer || this.groupSelectionFocus) {
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
             this.mini = true;
-        }, 2000)
+        }, 500);
     }
 
     mounted() {

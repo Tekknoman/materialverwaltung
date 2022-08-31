@@ -19,6 +19,8 @@
               <v-list-item-title class="text-h6"> {{ user.displayName }}</v-list-item-title>
               <v-list-item-subtitle>
                 <v-autocomplete
+                    @focus="groupSelectionFocus=true"
+                    @blur="groupSelectionFocus=false"
                     label="Group"
                     dense
                     solo
